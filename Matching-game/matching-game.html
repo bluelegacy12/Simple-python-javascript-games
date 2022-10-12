@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Matching Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/fluid-canvas@latest"></script>
+</head>
+
+<body>
+    <button type="button" onclick="startGame()">Start Game!</button>
+    <p>The left side has one extra smiling face. Find it and click on it!</p>
+    <p id="timer">0</p>
+    <div id="leftSide"></div>
+    <div id="rightSide"></div>
+    <style>
+        img {
+            position: absolute;
+        }
+
+        div {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+        }
+
+        #rightSide {
+            left: 500px;
+            border-left: 1px solid;
+        }
+    </style>
+    <script>
+        let numberOfFaces = 5;
+        const theLeftSide = document.getElementById('leftSide');
+        const theRightSide = document.getElementById('rightSide');
+        let timer;
+
+        function generateFaces() {
+            clearInterval(timer);
+            let secs = 10;
+            timer = setInterval(function () {
+                document.getElementById('timer').innerHTML = secs;
+                if (secs < 1) { clearInterval(timer); alert("Time's up!"); gameOver(); }
+                secs--;
+            }, 1000);
+            while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+            }
+            while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+            }
+            for (let i = 0; i < numberOfFaces; i++) {
+                let face = document.createElement("img");
+                face.src = 'images/smile.png';
+                let randomTop = Math.floor(Math.random() * 400) + 1;
+                let randomLeft = Math.floor(Math.random() * 400) + 1;
+                face.style.top = randomTop + 'px';
+                face.style.left = randomLeft + 'px';
+                theLeftSide.appendChild(face);
+            }
+            const leftSideImages = theLeftSide.cloneNode(true);
+            leftSideImages.removeChild(leftSideImages.lastChild);
+            theRightSide.appendChild(leftSideImages);
+            theLeftSide.lastChild.addEventListener('click', nextLevel);
+            theLeftSide.addEventListener('click', gameOver);
+
+        }
+
+        function startGame() {
+            alert('The countdown begins!');
+            numberOfFaces = 5;
+            generateFaces();
+        }
+
+        function nextLevel(event) {
+            event.stopPropagation();
+            numberOfFaces += 5;
+            generateFaces();
+        }
+
+        function gameOver() {
+            clearInterval(timer);
+            alert('Game Over!');
+            theLeftSide.lastChild.removeEventListener('click', nextLevel);
+            theLeftSide.removeEventListener('click', gameOver);
+        }
+    </script>
+</body>
+
+</html>

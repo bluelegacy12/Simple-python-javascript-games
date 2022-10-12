@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Solfege Game</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>Easy Mode: After hearing a scale, you will hear two notes: 'Do' and then a random note. Guess the random
+        note!<br>
+        Hard Mode: You will only hear one note. Guess the note!
+    </h1>
+    <button type="button" onclick="easyGame()" id="easy">Easy Game</button>
+    <button type="button" onclick="hardGame()" id="hard">Hard Game</button>
+    <button type="button" onclick="replay()" id="replay">Replay</button>
+    <div id="solfege">
+        <img src="images/do2.png" id="do2">
+        <img src="images/ti.png" id="ti">
+        <img src="images/la.png" id="la">
+        <img src="images/sol.png" id="sol">
+        <img src="images/fa.png" id="fa">
+        <img src="images/mi.png" id="mi">
+        <img src="images/re.png" id="re">
+        <img src="images/do.png" id="do">
+    </div>
+    <div style="visibility: hidden;" id="audio">
+        <audio src="audio/Do.mp3" id="doa"></audio>
+        <audio src="audio/Re.mp3" id="rea"></audio>
+        <audio src="audio/Mi.mp3" id="mia"></audio>
+        <audio src="audio/Fa.mp3" id="faa"></audio>
+        <audio src="audio/So.mp3" id="sola"></audio>
+        <audio src="audio/La.mp3" id="laa"></audio>
+        <audio src="audio/Ti.mp3" id="tia"></audio>
+        <audio src="audio/Do2.mp3" id="do2a"></audio>
+        <audio src="audio/C Major Scale.mp3" id="scale"></audio>
+    </div>
+    <script>
+        const do1 = document.body.querySelector('#do');
+        const re = document.body.querySelector('#re');
+        const mi = document.body.querySelector('#mi');
+        const fa = document.body.querySelector('#fa');
+        const sol = document.body.querySelector('#sol');
+        const la = document.body.querySelector('#la');
+        const ti = document.body.querySelector('#ti');
+        const do2 = document.body.querySelector('#do2');
+        let choice;
+        let answer;
+        let note;
+        let gameStart = 0;
+        document.body.querySelector('#scale').playbackRate = 5;
+
+
+        do1.addEventListener('click', doPlay);
+        re.addEventListener('click', rePlay);
+        mi.addEventListener('click', miPlay);
+        fa.addEventListener('click', faPlay);
+        sol.addEventListener('click', solPlay);
+        la.addEventListener('click', laPlay);
+        ti.addEventListener('click', tiPlay);
+        do2.addEventListener('click', do2Play);
+
+        document.body.querySelector('#solfege').addEventListener('click', giveAnswer);
+
+        function doPlay() {
+            document.body.querySelector('#doa').play();
+        }
+        function rePlay() {
+            document.body.querySelector('#rea').play();
+            choice = 're';
+        }
+        function miPlay() {
+            document.body.querySelector('#mia').play();
+            choice = 'mi';
+        }
+        function faPlay() {
+            document.body.querySelector('#faa').play();
+            choice = 'fa';
+        }
+        function solPlay() {
+            document.body.querySelector('#sola').play();
+            choice = 'sol';
+        }
+        function laPlay() {
+            document.body.querySelector('#laa').play();
+            choice = 'la';
+        }
+        function tiPlay() {
+            document.body.querySelector('#tia').play();
+            choice = 'ti';
+        }
+        function do2Play() {
+            document.body.querySelector('#do2a').play();
+            choice = 'do2';
+        }
+
+        function easyGame() {
+            document.body.querySelector('h1').innerHTML = "After hearing a scale, you will hear two notes: 'Do' and a random note in the chord. Guess the random note!";
+            choice = 'none';
+            gameStart = 1;
+            document.body.querySelector('#replay').style = 'visibility: visible';
+            let num = Math.floor(Math.random() * 7) + 1;
+            const solfege = ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti', 'do2'];
+            note = '#' + solfege[num] + 'a';
+            answer = solfege[num];
+            document.body.querySelector('#scale').play();
+            setTimeout(function () { document.body.querySelector('#doa').play(); }, 4000);
+            setTimeout(function () { document.body.querySelector(note).play(); }, 6000);
+        }
+
+        function hardGame() {
+            document.body.querySelector('h1').innerHTML = "After hearing a scale, you will hear only one note. Guess the note!";
+            choice = 'none';
+            gameStart = 2;
+            document.body.querySelector('#replay').style = 'visibility: visible';
+            let num = Math.floor(Math.random() * 7) + 1;
+            const solfege = ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti', 'do2'];
+            note = '#' + solfege[num] + 'a';
+            answer = solfege[num];
+            document.body.querySelector('#scale').play();
+            setTimeout(function () { document.body.querySelector(note).play(); }, 4000);
+        }
+
+        function giveAnswer() {
+            if (gameStart > 0) {
+                if (choice == answer) {
+                    document.body.querySelector('h1').innerHTML = "Correct! Click a button to play again!";
+                    gameStart = 0;
+                    document.body.querySelector('#replay').style = 'visibility: hidden';
+                }
+                else {
+                    document.body.querySelector('h1').innerHTML = "Incorrect! Listen again:";
+                    if (gameStart == 1) {
+                        setTimeout(function () { document.body.querySelector('#doa').play(); }, 3000);
+                        setTimeout(function () { document.body.querySelector(note).play(); }, 5000);
+                    }
+                    else {
+                        setTimeout(function () { document.body.querySelector(note).play(); }, 3000);
+                    }
+                }
+            }
+        }
+
+        function replay() {
+            if (gameStart == 1) {
+                document.body.querySelector('#doa').play();
+                setTimeout(function () { document.body.querySelector(note).play(); }, 2000);
+            }
+            else {
+                document.body.querySelector(note).play();
+            }
+        }
+    </script>
+    <style>
+        h1 {
+            font-size: larger;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        #solfege {
+            width: 100px;
+            margin-left: 45%;
+            margin-top: 0px;
+            padding-top: 0px;
+        }
+
+        img {
+            width: 75px;
+        }
+
+        button {
+            position: absolute;
+            width: 110px;
+            height: 50px;
+            font-size: medium;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-style: italic;
+            border-radius: 20px;
+            margin-left: 100px;
+        }
+
+        #easy {
+            background-color: lawngreen;
+            color: violet;
+            margin-top: 50px;
+        }
+
+        #hard {
+            background-color: orangered;
+            color: skyblue;
+            margin-top: 150px;
+        }
+
+        #replay {
+            visibility: hidden;
+            margin-left: 1000px;
+            margin-top: 75px;
+        }
+    </style>
+</body>
+
+</html>
